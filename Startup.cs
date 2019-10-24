@@ -13,7 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
-
+using System.Reflection;
+using System.IO;
 namespace InventoryAPI
 {
     public class Startup
@@ -33,9 +34,28 @@ namespace InventoryAPI
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Inventory CRUD API",
+                    Description = "CRUD funtionality with Swagger Documentation.",
+                    TermsOfService = "None",
+                    Contact = new Contact
+                    {
+                        Name = "Brian Adams",
+                        Email = string.Empty,
+                        Url = "https://techtenant.co.ke/blog"
+                    }
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
         }
 
